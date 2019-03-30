@@ -100,9 +100,6 @@ on init && property:vendor.skip.init=0
     # Disable powersaving
     write /sys/module/lpm_levels/parameters/sleep_disabled 1
 
-    # Loading kernel modules in background
-    start insmod_sh
-
     # Support legacy paths
     symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
@@ -418,9 +415,6 @@ on zygote-start
 on early-boot
     # wait for devices
     wait_for_prop vendor.qcom.devup 1
-
-    # wait for insmod_sh to finish all modules
-    wait_for_prop vendor.all.modules.ready 1
 
     write /sys/kernel/boot_adsp/boot 1
     write /sys/kernel/boot_cdsp/boot 1
@@ -815,13 +809,6 @@ service ipastart_sh /vendor/bin/init.qcom.ipastart.sh
     class main
     user system
     group net_admin
-    disabled
-    oneshot
-
-service insmod_sh /vendor/bin/init.insmod.sh
-    class main
-    user root
-    group root system
     disabled
     oneshot
 
